@@ -39,8 +39,23 @@ jobs:
         working-directory: part-3
         run: npm test
 
-      - name: Upload Playwright report (part-2)
+      - name: List workspace (debug)
         if: always()
+        run: |
+          echo "Workspace files for debugging artifact uploads"
+          ls -R
+
+      - name: Find artifacts (part-2)
+        id: find-artifacts-part2
+        run: |
+          found=false
+          if [ -d "part-2/playwright-report" ] || [ -d "part-2/test-results" ]; then
+            found=true
+          fi
+          echo "found=$found" >> $GITHUB_OUTPUT
+
+      - name: Upload Playwright report (part-2)
+        if: always() && steps.find-artifacts-part2.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-part-2
@@ -48,8 +63,17 @@ jobs:
             part-2/playwright-report
             part-2/test-results
 
+      - name: Find artifacts (part-3)
+        id: find-artifacts-part3
+        run: |
+          found=false
+          if [ -d "part-3/playwright-report" ] || [ -d "part-3/test-results" ]; then
+            found=true
+          fi
+          echo "found=$found" >> $GITHUB_OUTPUT
+
       - name: Upload Playwright report (part-3)
-        if: always()
+        if: always() && steps.find-artifacts-part3.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-part-3

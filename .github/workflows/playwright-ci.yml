@@ -46,6 +46,7 @@ jobs:
           ls -R
 
       - name: Find artifacts (part-2)
+        if: always()
         id: find-artifacts-part2
         run: |
           found=false
@@ -64,6 +65,7 @@ jobs:
             part-2/test-results
 
       - name: Find artifacts (part-3)
+        if: always()
         id: find-artifacts-part3
         run: |
           found=false
